@@ -1,8 +1,12 @@
 "use client";
-import { createContext, useContext, useState } from "react";
-import type { OrbId } from "../types/universe";
 
-interface UniverseState {
+import { createContext, useContext, useState } from "react";
+import type { OrbId, Vec2 } from "@/types/universe";
+
+interface UniverseContextType {
+  time: number;
+  setTime: (n: number) => void;
+
   hovered: OrbId | null;
   setHovered: (id: OrbId | null) => void;
 
@@ -15,31 +19,34 @@ interface UniverseState {
   drag: boolean;
   setDrag: (b: boolean) => void;
 
-  mPos: { x: number; y: number };
-  setMPos: (p: { x: number; y: number }) => void;
+  mPos: Vec2;
+  setMPos: (p: Vec2) => void;
 
-  off: { x: number; y: number };
-  setOff: (p: { x: number; y: number }) => void;
+  off: Vec2;
+  setOff: (p: Vec2) => void;
 
-  vel: { x: number; y: number };
-  setVel: (v: { x: number; y: number }) => void;
+  vel: Vec2;
+  setVel: (v: Vec2) => void;
 }
 
-const UniverseContext = createContext<UniverseState | null>(null);
+const UniverseContext = createContext<UniverseContextType | null>(null);
 export const useUniverse = () => useContext(UniverseContext)!;
 
 export function UniverseProvider({ children }: { children: React.ReactNode }) {
+  const [time, setTime] = useState(0);
   const [hovered, setHovered] = useState<OrbId | null>(null);
   const [page, setPage] = useState<OrbId | null>(null);
   const [warping, setWarping] = useState(false);
   const [drag, setDrag] = useState(false);
-  const [mPos, setMPos] = useState({ x: 50, y: 50 });
-  const [off, setOff] = useState({ x: 0, y: 0 });
-  const [vel, setVel] = useState({ x: 0, y: 0 });
+  const [mPos, setMPos] = useState<Vec2>({ x: 50, y: 50 });
+  const [off, setOff] = useState<Vec2>({ x: 0, y: 0 });
+  const [vel, setVel] = useState<Vec2>({ x: 0, y: 0 });
 
   return (
     <UniverseContext.Provider
       value={{
+        time,
+        setTime,
         hovered,
         setHovered,
         page,
