@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import MobileInfiniteUniverse from "@/components/mobile/MobileInfiniteUniverse";
+import MobileInfiniteUniverse from "@/components/mobile/ui/MobileInfiniteUniverse";
 
 const UniverseCanvas = dynamic(
   () => import("@/components/universe/UniverseCanvas"),

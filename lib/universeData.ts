@@ -11,6 +11,7 @@ export const ORBS: Orb[] = [
     c2: "#8b5cf6",
     d: 0,
     mn: 1,
+    url: "/universe/about",
   },
   {
     id: "work",
@@ -22,6 +23,7 @@ export const ORBS: Orb[] = [
     c2: "#f97316",
     d: 0.5,
     mn: 2,
+    url: "/universe/work",
   },
   {
     id: "skills",
@@ -33,6 +35,7 @@ export const ORBS: Orb[] = [
     c2: "#3b82f6",
     d: 1,
     mn: 1,
+    url: "/universe/skills",
   },
   {
     id: "contact",
@@ -44,6 +47,7 @@ export const ORBS: Orb[] = [
     c2: "#ef4444",
     d: 1.5,
     mn: 0,
+    url: "/universe/contact",
   },
   {
     id: "blog",
@@ -55,6 +59,7 @@ export const ORBS: Orb[] = [
     c2: "#ec4899",
     d: 2,
     mn: 1,
+    url: "/universe/blog",
   },
 ];
 

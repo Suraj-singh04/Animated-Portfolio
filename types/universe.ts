@@ -10,6 +10,7 @@ export interface Orb {
   c2: string;
   d: number;
   mn: number;
+  url: string;
 }
 
 export interface PageContent {

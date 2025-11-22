@@ -1,16 +1,15 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { ORBS, CONTENT } from "@/lib/universeData";
-import type { Orb, OrbId } from "@/types/universe";
+import { Orb, OrbId } from "@/types/universe";
 
 // --- CONFIGURATION ---
 const DRAG_SENSITIVITY = 0.005;
 const SNAP_SPEED = 0.1;
-const RADIUS_X = 130; // Width of the orbit
-const RADIUS_Y = 40; // Tilt/Height of the orbit
-const SCALE_MIN = 0.4; // Size of planets at the very back
-const SCALE_MAX = 1.6; // Size of the planet at the front (Center)
-
+const RADIUS_X = 130;
+const RADIUS_Y = 40;
+const SCALE_MIN = 0.4;
+const SCALE_MAX = 1.6;
 export default function MobileInfiniteUniverse() {
   const [rotation, setRotation] = useState(0);
   const [time, setTime] = useState(0);

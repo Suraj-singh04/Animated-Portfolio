@@ -45,8 +45,8 @@ module.exports = {
       animation: {
         menuRotate: "menuRotate 12s linear infinite",
         menuFade: "menuFade 0.45s ease forwards",
-        flashPulse: "flashPulse 0.8s ease-out forwards",
-        warpLine: "warpLine 0.8s ease-out forwards",
+        flashPulse: "flashPulse 0.9s ease-out forwards",
+        warpLine: "warpLine 0.9s ease-out forwards",
       },
     },
   },
