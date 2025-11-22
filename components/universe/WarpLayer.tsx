@@ -13,31 +13,48 @@ export default function WarpOverlay({ warping, currentOrb, warpLines }: Props) {
 
   return (
     <div className="absolute inset-0 z-[100] overflow-hidden">
+      {/* Flash pulse orb */}
       <div
-        className="absolute left-1/2 top-1/2 rounded-full animate-flash"
+        className="absolute left-1/2 top-1/2 rounded-full animate-[flashPulse_0.8s_ease-out_forwards]"
         style={{
-          transform: "translate(-50%,-50%)",
-          width: 10,
-          height: 10,
+          transform: "translate(-50%, -50%)",
+          width: "10px",
+          height: "10px",
           background: `radial-gradient(circle, white 0%, ${currentOrb.c1} 50%, transparent 70%)`,
         }}
       />
-      {warpLines.map((l) => (
+
+      {/* Warp trails */}
+      {warpLines.map((line) => (
         <div
-          key={l.id}
-          className="absolute animate-warp"
+          key={line.id}
+          className="absolute animate-[warpLine_0.8s_ease-out_forwards]"
           style={{
-            left: `${50 + Math.cos(l.angle) * 5}%`,
-            top: `${50 + Math.sin(l.angle) * 5}%`,
-            width: l.length,
-            height: 2,
+            left: `${50 + Math.cos(line.angle) * 5}%`,
+            top: `${50 + Math.sin(line.angle) * 5}%`,
+            width: `${line.length}px`,
+            height: "2px",
             background: `linear-gradient(90deg, white, ${currentOrb.c1}, transparent)`,
-            transform: `rotate(${l.angle}rad)`,
+            transform: `rotate(${line.angle}rad)`,
             transformOrigin: "0 50%",
-            animationDelay: `${l.offset * 0.005}s`,
+            animationDelay: `${line.offset * 0.005}s`,
+            opacity: 0,
           }}
         />
       ))}
+
+      {/* Inject keyframes */}
+      <style>{`
+        @keyframes warpLine {
+          0% { opacity: 0; transform: scaleX(0) }
+          30% { opacity: 1 }
+          100% { opacity: 0; transform: scaleX(3) }
+        }
+        @keyframes flashPulse {
+          0% { transform: translate(-50%, -50%) scale(1); opacity: 1 }
+          100% { transform: translate(-50%, -50%) scale(100); opacity: 0 }
+        }
+      `}</style>
     </div>
   );
 }

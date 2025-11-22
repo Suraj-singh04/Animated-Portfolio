@@ -1,9 +1,5 @@
-import UniverseCanvas from "@/components/universe/UniverseCanvas";
+import ClientWrapper from "@/components/ClientWrapper";
 
 export default function HomePage() {
-  return (
-    <main className="w-full">
-      <UniverseCanvas />
-    </main>
-  );
+  return <ClientWrapper />;
 }

@@ -4,10 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import NebulaLayer from "./NebulaLayer";
 import StarsLayer from "./StarsLayer";
 import ParticlesLayer from "./ParticlesLayer";
-import CursorTrailLayer from "./CursorTrailLayer";
 import ProfileSection from "./ProfileSection";
 import OrbsLayer from "./OrbsLayer";
-import WarpOverlay from "./WarpOverlay";
+import WarpOverlay from "./WarpLayer";
 import PageOverlay from "./PageOverlay";
 import HUDOverlay from "./HUDOverlay";
 import { ORBS } from "@/lib/universeData";
@@ -81,16 +80,24 @@ export default function UniverseCanvas() {
 
   // Trail
   useEffect(() => {
-    if (drag) {
-      setTrail((r) => [
-        ...r.slice(-8),
-        { x: mPos.x, y: mPos.y, id: Date.now() },
-      ]);
-    } else if (trail.length) {
-      const t = setTimeout(() => setTrail([]), 300);
-      return () => clearTimeout(t);
-    }
-  }, [drag, mPos, trail.length]);
+    if (!drag) return;
+
+    let frame: number;
+    let lastId = Date.now();
+
+    const update = () => {
+      // don't flood events: add a point only if timestamp changed
+      if (Date.now() !== lastId) {
+        lastId = Date.now();
+        setTrail((r) => [...r.slice(-8), { x: mPos.x, y: mPos.y, id: lastId }]);
+      }
+      frame = requestAnimationFrame(update);
+    };
+
+    frame = requestAnimationFrame(update);
+
+    return () => cancelAnimationFrame(frame);
+  }, [drag, mPos]);
 
   // Precomputed arrays
   const particles: Particle[] = useMemo(
@@ -105,27 +112,23 @@ export default function UniverseCanvas() {
     []
   );
 
-  const staticStars: StaticStar[] = useMemo(
-    () =>
-      Array.from({ length: 40 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 250 - 75,
-        y: Math.random() * 250 - 75,
-        s: 1 + Math.random() * 1.5,
-        tw: 0.4 + Math.random(),
-      })),
-    []
+  const [staticStars] = useState<StaticStar[]>(() =>
+    Array.from({ length: 40 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 250 - 75,
+      y: Math.random() * 250 - 75,
+      s: 1 + Math.random() * 1.5,
+      tw: 0.4 + Math.random(),
+    }))
   );
 
-  const warpLines: WarpLine[] = useMemo(
-    () =>
-      Array.from({ length: 40 }, (_, i) => ({
-        id: i,
-        angle: (i * 9 * Math.PI) / 180,
-        length: 50 + Math.random() * 150,
-        offset: Math.random() * 100,
-      })),
-    []
+  const [warpLines] = useState<WarpLine[]>(() =>
+    Array.from({ length: 40 }, (_, i) => ({
+      id: i,
+      angle: (i * 9 * Math.PI) / 180,
+      length: 50 + Math.random() * 150,
+      offset: Math.random() * 100,
+    }))
   );
 
   const conns: [number, number][] = [
@@ -239,9 +242,6 @@ export default function UniverseCanvas() {
             }}
           />
         )}
-
-        {/* Cursor trail */}
-        {!page && <CursorTrailLayer trail={trail} />}
 
         {/* Main scene */}
         <div

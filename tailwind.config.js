@@ -18,29 +18,35 @@ module.exports = {
       boxShadow: {
         glow: "0 0 35px rgba(99,102,241,0.35)",
       },
+
+      /* 🚀 Required for InfiniteMenu */
       keyframes: {
-        shoot: {
-          "0%": { transform: "translateX(-80px)", opacity: "0" },
-          "15%": { opacity: "1" },
-          "100%": { transform: "translateX(300px)", opacity: "0" },
+        menuRotate: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
         },
-        warp: {
+        menuFade: {
+          "0%": { opacity: "0", transform: "scale(0.85)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        flashPulse: {
+          "0%": { transform: "translate(-50%, -50%) scale(1)", opacity: "1" },
+          "100%": {
+            transform: "translate(-50%, -50%) scale(100)",
+            opacity: "0",
+          },
+        },
+        warpLine: {
           "0%": { opacity: "0", transform: "scaleX(0)" },
           "30%": { opacity: "1" },
           "100%": { opacity: "0", transform: "scaleX(3)" },
         },
-        flash: {
-          "0%": { transform: "translate(-50%,-50%) scale(1)", opacity: "1" },
-          "100%": {
-            transform: "translate(-50%,-50%) scale(100)",
-            opacity: "0",
-          },
-        },
       },
       animation: {
-        shoot: "shoot 0.6s linear forwards",
-        warp: "warp 0.8s ease-out forwards",
-        flash: "flash 0.8s ease-out forwards",
+        menuRotate: "menuRotate 12s linear infinite",
+        menuFade: "menuFade 0.45s ease forwards",
+        flashPulse: "flashPulse 0.8s ease-out forwards",
+        warpLine: "warpLine 0.8s ease-out forwards",
       },
     },
   },

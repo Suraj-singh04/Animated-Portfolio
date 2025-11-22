@@ -36,7 +36,7 @@ export default function HUDOverlay({ time }: { time: number }) {
       {/* Hint */}
       <div className="pointer-events-none absolute bottom-3 left-1/2 flex -translate-x-1/2 flex-col items-center opacity-40">
         <span className="mb-1 text-[0.5rem] tracking-[0.15em] text-white">
-          DRAG TO EXPLORE • CLICK PLANETS
+          EXPLORE SOLAR SYSTEM • CLICK PLANETS
         </span>
         <div className="flex h-5 w-9 items-center justify-center rounded-full border border-white/30">
           <div
