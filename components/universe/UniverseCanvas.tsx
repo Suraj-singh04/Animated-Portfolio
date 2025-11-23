@@ -7,7 +7,6 @@ import ParticlesLayer from "./ParticlesLayer";
 import ProfileSection from "./ProfileSection";
 import OrbsLayer from "./OrbsLayer";
 import WarpOverlay from "./WarpLayer";
-import PageOverlay from "./PageOverlay";
 import HUDOverlay from "./HUDOverlay";
 import { ORBS } from "@/lib/universeData";
 import type {
@@ -19,15 +18,13 @@ import type {
   WarpLine,
   Star,
 } from "@/types/universe";
+import { useRouter } from "next/navigation";
 
 export default function UniverseCanvas() {
   const [time, setTime] = useState(0);
   const [hovered, setHovered] = useState<string | null>(null);
   const [warping, setWarping] = useState(false);
   const [warpOrb, setWarpOrb] = useState<Orb | null>(null);
-  const [page, setPage] = useState<string | null>(null);
-  const [pageShow, setPageShow] = useState(false);
-  const [zoomOut, setZoomOut] = useState(false);
   const [off, setOff] = useState<Vec2>({ x: 0, y: 0 });
   const [vel, setVel] = useState<Vec2>({ x: 0, y: 0 });
   const [drag, setDrag] = useState(false);
@@ -39,6 +36,7 @@ export default function UniverseCanvas() {
   const [ready, setReady] = useState(false);
 
   const anim = useRef<number | null>(null);
+  const router = useRouter();
 
   // Time + ready
   useEffect(() => {
@@ -53,7 +51,7 @@ export default function UniverseCanvas() {
   // Shooting star
   useEffect(() => {
     const i = setInterval(() => {
-      if (Math.random() > 0.6 && !page && !warping) {
+      if (Math.random() > 0.6 && !warping) {
         setStar({
           x: Math.random() * 50 + 5,
           y: Math.random() * 35 + 5,
@@ -63,7 +61,7 @@ export default function UniverseCanvas() {
       }
     }, 4000);
     return () => clearInterval(i);
-  }, [page, warping]);
+  }, [warping]);
 
   // Inertia
   useEffect(() => {
@@ -86,7 +84,6 @@ export default function UniverseCanvas() {
     let lastId = Date.now();
 
     const update = () => {
-      // don't flood events: add a point only if timestamp changed
       if (Date.now() !== lastId) {
         lastId = Date.now();
         setTrail((r) => [...r.slice(-8), { x: mPos.x, y: mPos.y, id: lastId }]);
@@ -144,29 +141,16 @@ export default function UniverseCanvas() {
 
   // Handlers
   const handleOrbClick = (o: Orb) => {
-    if (warping || page || moved) return;
+    if (warping || moved) return;
     setWarpOrb(o);
     setWarping(true);
-    setTimeout(() => {
-      setPage(o.id);
-      setTimeout(() => {
-        setPageShow(true);
-        setWarping(false);
-      }, 100);
-    }, 800);
-  };
 
-  const handleBack = () => {
-    setPageShow(false);
-    setZoomOut(true);
     setTimeout(() => {
-      setPage(null);
-      setTimeout(() => setZoomOut(false), 600);
-    }, 100);
+      router.push(`/universe/${o.id}`);
+    }, 750);
   };
 
   const handleMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    if (page) return;
     setDrag(true);
     setMoved(false);
     setLastM({ x: e.clientX || 0, y: e.clientY || 0 });
@@ -180,7 +164,7 @@ export default function UniverseCanvas() {
       y: (((e.clientY || 0) - rect.top) / rect.height) * 100,
     });
 
-    if (!drag || page) return;
+    if (!drag) return;
 
     const dx = (e.clientX || 0) - lastM.x;
     const dy = (e.clientY || 0) - lastM.y;
@@ -207,7 +191,7 @@ export default function UniverseCanvas() {
           height: "clamp(360px, 60vh, 650px)",
           background:
             "linear-gradient(135deg, #0a0a12 0%, #12121f 50%, #0d1a2d 100%)",
-          cursor: drag ? "grabbing" : page ? "default" : "grab",
+          cursor: drag ? "grabbing" : "grab",
           opacity: ready ? 1 : 0,
           transition: "opacity 0.7s",
         }}
@@ -219,14 +203,14 @@ export default function UniverseCanvas() {
           offX={off.x}
           offY={off.y}
           stars={staticStars}
-          hidden={!!page}
+          hidden={false}
         />
         <ParticlesLayer
           time={time}
           offX={off.x}
           offY={off.y}
           particles={particles}
-          hidden={!!page}
+          hidden={false}
         />
 
         {/* Shooting star */}
@@ -247,17 +231,10 @@ export default function UniverseCanvas() {
         <div
           className="absolute inset-0"
           style={{
-            transition: warping
-              ? "transform 0.8s cubic-bezier(0.4,0,0.2,1), opacity 0.8s ease"
-              : zoomOut
-              ? "transform 0.7s cubic-bezier(0.34,1.56,0.64,1), opacity 0.6s ease"
-              : "transform 0.5s ease, opacity 0.5s ease",
-            transform: warping
-              ? "scale(15)"
-              : page && !zoomOut
-              ? "scale(15)"
-              : "scale(1)",
-            opacity: warping ? 0 : page && !zoomOut ? 0 : 1,
+            transition:
+              "transform 0.8s cubic-bezier(0.4,0,0.2,1), opacity 0.8s ease",
+            transform: warping ? "scale(15)" : "scale(1)",
+            opacity: warping ? 0 : 1,
             transformOrigin,
           }}
         >
@@ -320,7 +297,7 @@ export default function UniverseCanvas() {
             onClickOrb={handleOrbClick}
           />
 
-          {/* HUD (code snippets, hint, corners) */}
+          {/* HUD */}
           <HUDOverlay time={time} />
         </div>
 
@@ -329,17 +306,6 @@ export default function UniverseCanvas() {
           warping={warping}
           currentOrb={curOrb}
           warpLines={warpLines}
-        />
-
-        {/* Page overlay */}
-        <PageOverlay
-          page={page as any}
-          time={time}
-          currentOrb={curOrb}
-          particles={particles}
-          pageShow={pageShow}
-          zoomOut={zoomOut}
-          onBack={handleBack}
         />
       </div>
     </div>
