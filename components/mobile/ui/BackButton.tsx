@@ -1,17 +1,11 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function BackButton() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const from = searchParams.get("from");
 
   const handleBack = () => {
-    if (from) {
-      router.push(`/universe/${from}`); // return to the previous planet
-    } else {
-      router.push("/");
-    }
+    router.push("/");
   };
 
   return (

@@ -1,4 +1,4 @@
-import BackButton from "../mobile/ui/BackButton";
+import BackButton from "@/components/mobile/ui/BackButton";
 
 export default function About() {
   return (

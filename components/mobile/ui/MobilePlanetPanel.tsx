@@ -11,11 +11,7 @@ interface MobilePlanetPanelProps {
   time: number;
 }
 
-export default function MobilePlanetPanel({
-  orb,
-  onClose,
-  time,
-}: MobilePlanetPanelProps) {
+export default function MobilePlanetPanel({ orb, time }: MobilePlanetPanelProps) {
   const content = CONTENT[orb.id as OrbId];
 
   return (
@@ -27,7 +23,7 @@ export default function MobilePlanetPanel({
       }}
     >
       <div className="absolute left-5 top-5">
-        <BackButton onClick={onClose} />
+        <BackButton />
       </div>
 
       {/* Planet Header (Scaled up version of the orb) */}

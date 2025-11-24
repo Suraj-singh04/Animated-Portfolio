@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { ORBS } from "@/lib/universeData";
-import { OrbId } from "@/types/universe";
+import { Orb, OrbId, WarpLine } from "@/types/universe";
 import MobilePlanetPanel from "./MobilePlanetPanel";
 import PlanetOrb from "./PlanetOrb";
 import { useRouter } from "next/navigation";
@@ -27,7 +27,7 @@ export default function MobileInfiniteUniverse() {
   const [targetOrb, setTargetOrb] = useState<Orb | null>(null);
 
   const dragRef = useRef({ startX: 0, startRotation: 0 });
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number>(null);
 
   const n = ORBS.length;
   const sectorAngle = (Math.PI * 2) / n;

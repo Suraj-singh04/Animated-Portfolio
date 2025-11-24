@@ -1,4 +1,5 @@
-import BackButton from "../mobile/ui/BackButton";
+import BackButton from "@/components/mobile/ui/BackButton";
+import { Suspense } from "react";
 
 export default function About() {
   return (
